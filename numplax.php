@@ -16,6 +16,7 @@ class NUMPLA {
     $this->init($subject);
   }
 
+
   function get_prop($X,$Y,$x,$y) {
     $id = $Y * 27 + $X * 3 + $y * 9 + $x;
     $adrs = sprintf("%02d:%1d:%1d::%1d:%1d",$id, $X,$Y,$x,$y);
@@ -51,7 +52,7 @@ class NUMPLA {
     }
   }
 
-  function set_cell9x1() {
+  function set_cell91() {
     $stat = CREATED;
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $y) {
@@ -78,7 +79,7 @@ class NUMPLA {
     }
   }
   
-  function set_cell1x9() {
+  function set_cell19() {
     $stat = CREATED;
     foreach(range(0,2) as $X) {
       foreach(range(0,2) as $x) {
@@ -185,8 +186,22 @@ class NUMPLA {
   function count_cells() {
   }
 
+// $subject_P011= [
+//   2,0,0, 3,8,0, 9,0,0,
+//   0,0,0, 0,2,1, 4,0,0,
+//   8,4,0, 0,0,0, 5,2,3,
+// 
+//   5,6,8, 0,0,0, 0,4,0,
+//   0,3,9, 4,0,0, 0,8,2,
+//   4,0,0, 0,3,0, 0,0,9,
+// 
+//   0,2,6, 0,0,0, 9,0,0,
+//   1,0,4, 0,7,3, 8,0,0,
+//   9,8,0, 1,0,6, 2,0,4,
+//   ];
+
   function map() {
-echo '-----------------------------'. PHP_EOL;
+    echo '-----------------------------'. PHP_EOL;
     $solving_count = 0;
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $y) {
@@ -279,17 +294,44 @@ echo '-----------------------------'. PHP_EOL;
 // M A I N start
 require_once("subjects.php");
 
-//$cnp = new NUMPLA($subject_P001);
-$cnp = new NUMPLA($subject_P011);
+// $com = '';
+// $cnp;
+// 
+// while($com !== "quit") {
+//   echo '$command-> ';
+//   $com = fgets(STDIN);
+//   echo 'com: '. $com. PHP_EOL;
+//   if ($com === "load") {
+//     $cnp = new NUMPLA($subject_P011);
+//   } else
+//   if ($com === "solve") {
+//     $cnp->map();
+//     $cnp->set_cell3x3();
+//     $cnp->set_cell91();
+//     $cnp->set_cell19();
+//     $cnp->set_cell_all();
+//     $solved_count = count($cnp->det_solved_cells());
+//     if ($solved_count > 0) {
+//       $cnp->apply_solved_cells();
+//       $cnp->map();
+//     }
+//   }
+// }
+
+$load_subject = $subject_P178;
+$cnp = new NUMPLA($load_subject);
 $resolved_count = 0;
 $cnp->map();
+$trial = 0;
 do {
   $cnp->set_cell3x3();
-  $cnp->set_cell9x1();
-  $cnp->set_cell1x9();
+  $cnp->set_cell91();
+  $cnp->set_cell19();
   $cnp->set_cell_all();
   $solved_count = count($cnp->det_solved_cells());
   if ($solved_count > 0) {
+    $trial++;
+    echo 'TRIAL No. ' . $trial . PHP_EOL;
     $cnp->apply_solved_cells();
     $cnp->map();
   }
