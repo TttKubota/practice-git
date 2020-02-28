@@ -198,6 +198,9 @@ class NUMPLA {
     return $this->single_cad_list;
   }
 
+  function count_cells() {
+  }
+
   function map() {
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $y) {
@@ -284,42 +287,12 @@ echo SOLVING . PHP_EOL;
 
 
 // M A I N start
+require_once("subjects.php");
 
-// p068
-$subject_P068 = [
-  //X     0  0  0   1  1  1    2  2  2
-  //x     0  1  2   3  4  5    6  7  8
-  //y
-//Y
-   0, 0, 3,  0, 0, 8,   5, 0, 0,  //  0   0
-   5, 0, 7,  3, 4, 0,   0, 9, 0,  //  0   1
-   0, 2, 0,  0, 0, 0,   0, 0, 7,  //  0   2
-                                  //       
-   3, 7, 0,  5, 6, 0,   0, 0, 9,  //  1   0
-   0, 0, 6,  0, 3, 9,   7, 5, 0,  //  1   1
-   0, 5, 9,  0, 0, 4,   6, 0, 0,  //  1   2
-                                  //       
-   0, 0, 2,  4, 0, 7,   8, 0, 0,  //  2   0
-   7, 6, 5,  2, 8, 3,   9, 1, 4,  //  2   1
-   8, 0, 4,  0, 1, 0,   0, 7, 0,  //  2   2
-];
-
-$subject_P001= [
-  0,0,1, 2,7,6, 0,5,0,
-  0,0,7, 0,0,0, 9,0,2,
-  3,2,0, 1,0,0, 6,0,0,
-
-  4,0,6, 5,2,0, 0,0,7,
-  5,0,0, 9,0,4, 2,6,1,
-  2,0,0, 0,1,7, 0,0,5,
-
-  0,4,8, 0,3,0, 5,2,0,
-  9,0,0, 0,5,0, 7,8,3,
-  0,3,0, 8,6,2, 0,4,0,
-  ];
-
-$cnp = new NUMPLA($subject_P001);
+//$cnp = new NUMPLA($subject_P001);
+$cnp = new NUMPLA($subject_P011);
 $resolved_count = 0;
+$cnp->map();
 do {
   $cnp->set_cell3x3();
   $cnp->set_cell9x1();
@@ -328,6 +301,7 @@ do {
   $solved_count = count($cnp->det_solved_cells());
   if ($solved_count > 0) {
     $cnp->apply_solved_cells();
+    $cnp->map();
   }
 } while ($solved_count > 0);
 var_dump($cnp->cell);
