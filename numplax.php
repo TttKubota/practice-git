@@ -28,12 +28,10 @@ class NUMPLA {
     $stat = CREATED;
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $X) {
-            $cass = "";
+        $cass = "";
         foreach(range(0,2) as $y) {
           foreach(range(0,2) as $x) {
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $stat = $prop[1];
-            $num  = $prop[2];
+            list($adrs,$stat,$num) = $this->get_prop($X,$Y,$x,$y);
             if (in_array($stat, [ PRESET, SOLVED ], True)) {
               $cass .= (string)$num;
             }
@@ -41,16 +39,14 @@ class NUMPLA {
         }
         foreach(range(0,2) as $y) {
           foreach(range(0,2) as $x) {
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $adrs= $prop[0];
-            $stat = $prop[1];
+            list($adrs,$stat,$num) = $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
               $this->cell[$adrs]["cass33"]= $this->str_sort($cass);
             }
           }
         }
         $cass = "";
-        var_dump($this->cell[$adrs]);
+        // var_dump($this->cell[$adrs]);
       }
     }
   }
@@ -62,9 +58,7 @@ class NUMPLA {
         $cass = "";
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $stat = $prop[1];
-            $num  = $prop[2];
+            list($adrs,$stat,$num) = $this->get_prop($X,$Y,$x,$y);
             if (in_array($stat, [ PRESET, SOLVED ], True)) {
               $cass .= (string)$num;
             }
@@ -72,16 +66,14 @@ class NUMPLA {
         }
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $adrs= $prop[0];
-            $stat = $prop[1];
+            list($adrs,$stat,$num) = $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
               $this->cell[$adrs]["cass91"]= $this->str_sort($cass);
             }
           }
         }
         $cass = "";
-        var_dump($this->cell[$adrs]);
+        // var_dump($this->cell[$adrs]);
       }
     }
   }
@@ -93,9 +85,7 @@ class NUMPLA {
         $cass = "";
         foreach(range(0,2) as $Y) {
           foreach(range(0,2) as $y) {
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $stat = $prop[1];
-            $num  = $prop[2];
+            list($adrs,$stat,$num) = $this->get_prop($X,$Y,$x,$y);
             if (in_array($stat, [ PRESET, SOLVED ], True)) {
               $cass .= (string)$num;
             }
@@ -103,16 +93,14 @@ class NUMPLA {
         }
         foreach(range(0,2) as $Y) {
           foreach(range(0,2) as $y) {
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $adrs= $prop[0];
-            $stat = $prop[1];
+            list($adrs,$stat,$num) = $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
               $this->cell[$adrs]["cass19"]= $this->str_sort($cass);
             }
           }
         }
         $cass = "";
-        var_dump($this->cell[$adrs]);
+        // var_dump($this->cell[$adrs]);
       }
     }
   }
@@ -157,9 +145,7 @@ class NUMPLA {
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
             $cass_all = "";
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $adrs= $prop[0];
-            $stat= $prop[1];
+            list($adrs, $stat, $num) = $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
               $cass = ( $this->cell[$adrs]["cass33"] . 
               $this->cell[$adrs]["cass91"] .  $this->cell[$adrs]["cass19"]);
@@ -180,9 +166,7 @@ class NUMPLA {
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
             $cass_all = "";
-            $prop = $this->get_prop($X,$Y,$x,$y);
-            $adrs= $prop[0];
-            $stat= $prop[1];
+            list($adrs, $stat, $num) = $this->get_prop($X,$Y,$x,$y);
             $cass = $this->cell[$adrs]["cass"];
             if ($stat === SOLVING and strlen($cass) == 2)  {
               $cass = str_replace("0", "", $cass);
@@ -202,12 +186,18 @@ class NUMPLA {
   }
 
   function map() {
+echo '-----------------------------'. PHP_EOL;
+    $solving_count = 0;
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $y) {
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
             list($adrs, $stat, $num) = $this->get_prop($X,$Y,$x,$y);
-            echo $num;
+            echo $num . ',';
+            if ($num === "0") {
+               $solving_count++;
+            }
+
           }
           echo ' ';
         }
@@ -215,7 +205,7 @@ class NUMPLA {
       }
       echo PHP_EOL;
     }
-    echo PHP_EOL;
+    echo "not opened : " . $solving_count . PHP_EOL;
   }
 
   function apply_solved_cells() {
@@ -233,9 +223,9 @@ class NUMPLA {
   function init($subject) {
     foreach ($subject as $cell_id => $num) {
       $cell_adrs = $this->id2adrs($cell_id); 
-      echo $cell_adrs . 'LINE='. __LINE__ .PHP_EOL;
+      //echo $cell_adrs . 'LINE='. __LINE__ .PHP_EOL;
       if ((int)$num > 0) {
-echo PRESET. PHP_EOL;
+//echo PRESET. PHP_EOL;
         $this->cell[$cell_adrs] = [
           'adrs' => $cell_adrs,
           'stat' => PRESET,
@@ -246,7 +236,7 @@ echo PRESET. PHP_EOL;
           'cass91' => "0",
         ];
       } else {
-echo SOLVING . PHP_EOL;
+//echo SOLVING . PHP_EOL;
         $this->cell[$cell_adrs] = [
           'adrs' => $cell_adrs,
           'stat' => SOLVING,
@@ -304,9 +294,8 @@ do {
     $cnp->map();
   }
 } while ($solved_count > 0);
-var_dump($cnp->cell);
+//var_dump($cnp->cell);
 $cnp->map();
 exit();
-echo '-----------------------------'. PHP_EOL;
 
 
