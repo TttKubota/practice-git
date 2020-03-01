@@ -43,6 +43,15 @@ class NUMPLA {
     return [ $adrs, $stat, $num, $cass33, $cass91, $cass19, $cass ];
   }
 
+  function set_cell_mask($cell_id, $num, $force_set_flag) {
+      $cell_adrs = $this->id2adrs($cell_id); 
+      if ($force_set_flag == true) {
+        $this->cell[$cell_adrs]['num'] = $num;
+        $this->cell[$cell_adrs]['stat'] =  SOLVED;
+      } else {
+        $this->cell[$cell_adrs]['mask'] .= $num;
+      }
+  }
   function set_cell3x3() {
     $stat = CREATED;
     foreach(range(0,2) as $Y) {
@@ -470,6 +479,7 @@ while($com !== "quit" and $com !== "q") {
   foreach($com_arr as $arg) {
     echo ' ' . $arg;
   }
+  echo PHP_EOL;
   if (count($com_arr) >= 1) {
     $com = trim($com_arr[0]);
     $arc = count($com_arr);
@@ -561,11 +571,33 @@ while($com !== "quit" and $com !== "q") {
       echo 'Subject not loaded.'. PHP_EOL;
     }
   } else
-  if ($com === "mask" or $com === "m") {
-    if (count($com_arr) >= 1) {
+  if ($com === "force" or $com === "f") {
+    if (count($com_arr) == 3) {
       $colrow = $com_arr[1];
-      echo 'colrow:'.$colrow . '  = '. colrow2id($colrow). PHP_EOL;
+      $masknum= $com_arr[2];
+      $id = colrow2id($colrow);
+      echo 'id:'.$id.'('.$colrow .') += '. $masknum . PHP_EOL;
+      $cnp->set_cell_mask($id, $masknum,true);
+      $cnp->set_cell_all();
+      $cnp->map_cand('cass');
     }
+  } else
+  if ($com === "mask" or $com === "k") {
+    if (count($com_arr) == 3) {
+      $colrow = $com_arr[1];
+      $masknum= $com_arr[2];
+      $id = colrow2id($colrow);
+      echo 'id:'.$id.'('.$colrow .') += '. $masknum . PHP_EOL;
+      $cnp->set_cell_mask($id, $masknum,false);
+      $cnp->set_cell_all();
+      $cnp->map_cand('cass');
+    }
+//  } else
+//  if ($com === "mask" or $com === "m") {
+//    if (count($com_arr) >= 1) {
+//      $colrow = $com_arr[1];
+//      echo 'colrow:'.$colrow . '  = '. colrow2id($colrow). PHP_EOL;
+//    }
   } else
   if ($com === "help" or $com === "h") {
     echo PHP_EOL;
