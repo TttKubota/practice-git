@@ -1,11 +1,25 @@
 <?php
 
+// numpla analizer
+// command
+//   1. load        (l)
+//   2. solveall    (a)
+//   3. update      (u)
+//   4. solve       (s)
+//   5. mapdet
+//   6. map         (m)
+//   7. map33
+//   8. map91
+//   9. map19
+//   10. mapall
+//   11. prop       (p)
+//   12. prop2
+// 
 const CREATED = 'CREATED';
 const PRESET  = 'PRESET';
 const SOLVED  = 'SOLVED';
 const SOLVING = 'SOLVING';
 const DISPCA  = 'DISPCA';
-
 
 class NUMPLA {
   var $cell = [];
@@ -33,13 +47,13 @@ class NUMPLA {
     $stat = CREATED;
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $X) {
-        $cass = "";
+        $occupied = "";
         foreach(range(0,2) as $y) {
           foreach(range(0,2) as $x) {
             list($adrs, $stat, $num,$s1,$s2,$s3, $s4) =
               $this->get_prop($X,$Y,$x,$y);
             if (in_array($stat, [ PRESET, SOLVED ], True)) {
-              $cass .= (string)$num;
+              $occupied .= (string)$num;
             }
           }
         }
@@ -48,12 +62,11 @@ class NUMPLA {
             list($adrs, $stat, $num,$s1,$s2,$s3, $s4) =
              $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
-           //   $this->cell[$adrs]["cass33"]= $this->str_sort($cass);
-              $this->cell[$adrs]["cass33"]= $this->str_free_number($cass);
+              $this->cell[$adrs]["cass33"]= $this->str_free_number($occupied);
             }
           }
         }
-        $cass = "";
+        $occupied = "";
         // var_dump($this->cell[$adrs]);
       }
     }
@@ -63,14 +76,14 @@ class NUMPLA {
     $stat = CREATED;
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $y) {
-        $cass = "";
+        $occupied = "";
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
             list($adrs, $stat, $num,$s1,$s2,$s3, $s4) =
              $this->get_prop($X,$Y,$x,$y);
 //            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
             if (in_array($stat, [ PRESET, SOLVED ], True)) {
-              $cass .= (string)$num;
+              $occupied .= (string)$num;
             }
           }
         }
@@ -78,12 +91,12 @@ class NUMPLA {
           foreach(range(0,2) as $x) {
             list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
-        //      $this->cell[$adrs]["cass91"]= $this->str_sort($cass);
-              $this->cell[$adrs]["cass91"]= $this->str_free_number($cass);
+        //      $this->cell[$adrs]["cass91"]= $this->str_sort($occupied);
+              $this->cell[$adrs]["cass91"]= $this->str_free_number($occupied);
             }
           }
         }
-        $cass = "";
+        $occupied = "";
         // var_dump($this->cell[$adrs]);
       }
     }
@@ -93,12 +106,12 @@ class NUMPLA {
     $stat = CREATED;
     foreach(range(0,2) as $X) {
       foreach(range(0,2) as $x) {
-        $cass = "";
+        $occupied = "";
         foreach(range(0,2) as $Y) {
           foreach(range(0,2) as $y) {
             list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
             if (in_array($stat, [ PRESET, SOLVED ], True)) {
-              $cass .= (string)$num;
+              $occupied .= (string)$num;
             }
           }
         }
@@ -106,12 +119,12 @@ class NUMPLA {
           foreach(range(0,2) as $y) {
             list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
-            //  $this->cell[$adrs]["cass19"]= $this->str_sort($cass);
-              $this->cell[$adrs]["cass19"]= $this->str_free_number($cass);
+            //  $this->cell[$adrs]["cass19"]= $this->str_sort($occupied);
+              $this->cell[$adrs]["cass19"]= $this->str_free_number($occupied);
             }
           }
         }
-        $cass = "";
+        $occupied = "";
         // var_dump($this->cell[$adrs]);
       }
     }
@@ -131,20 +144,21 @@ class NUMPLA {
   function str_free_number($str) {
     $ret = "0";
     foreach(range(1,9) as $n) {
-      if (strpos($str, (string)$n) !== false) {
+      if (strpos($str, (string)$n) === false) {
         $ret .= $n;
       }
     }
     return $ret;
     //return ($ret === "") ? "0" : $ret;
   }
-  function str_rev_sort($str33,$str91,$str19) {
+  function str_rev_sort($str33,$str91,$str19,$mask) {
     $ret = "0";
     foreach(range(1,9) as $n) {
-      if (!(
-        (strpos($str33,(string)$n) == false) and
-        (strpos($str91,(string)$n) == false) and
-        (strpos($str19,(string)$n) == false))
+      if ((
+        (strpos($str33,(string)$n) !== false) and
+        (strpos($str91,(string)$n) !== false) and
+        (strpos($str19,(string)$n) !== false) and
+        (strpos($mask, (string)$n) === false))
       ) {
         $ret .= $n;
       }
@@ -179,7 +193,7 @@ class NUMPLA {
   function gen_cand($str) {
     $ret = "";
     foreach(range(1,9) as $c) {
-      $ret .= (strpos($str, (string)$c) === false) ? (string)$c : '*';
+      $ret .= (strpos($str, (string)$c) !== false) ? (string)$c : '*';
     }
     return $ret;
   }
@@ -202,38 +216,36 @@ class NUMPLA {
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
             $cass_all = "";
-            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
+            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = 
+                  $this->get_prop($X,$Y,$x,$y);
             if ($stat === SOLVING) {
                $str33 = $s1;
                $str91 = $s2;
                $str19 = $s3;
-                
+               $mask  = $this->cell[$adrs]["mask"];
                $this->cell[$adrs]["cass"] = 
-                $this->str_rev_sort($str33,$str91,$str19);
-        //      echo 'CASS4 : ' . $this->cell[$adrs]["cass"] . PHP_EOL;
+                   $this->str_rev_sort($str33,$str91,$str19,$mask);
             }
-    //        echo 'CASS ' . $cass. PHP_EOL;
           }
         }
       }
     }
   }
-  function det_solved_cells() {
+function det_solved_cells() {
     $this->single_cad_list = [];
     foreach(range(0,2) as $Y) {
       foreach(range(0,2) as $y) {
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
             $cass_all = "";
-            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
-        //    $cass = $this->cell[$adrs]["cass"];
+            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = 
+                  $this->get_prop($X,$Y,$x,$y);
             $cass = $s4;
             if ($stat === SOLVING and strlen($cass) == 2)  {
               $cass = str_replace("0", "", $cass);
               $this->single_cad_list[] = [ "adrs" => $adrs, "num" => $cass ];
                  echo 'SOLVED:: '.$adrs.' = '.$cass. PHP_EOL;
             }
-    //        echo 'CASS ' . $cass. PHP_EOL;
           }
         }
       }
@@ -295,12 +307,12 @@ class NUMPLA {
       foreach(range(0,2) as $y) {
         foreach(range(0,2) as $X) {
           foreach(range(0,2) as $x) {
-            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) = $this->get_prop($X,$Y,$x,$y);
+            list($adrs,$stat,$num,$s1,$s2,$s3, $s4) 
+              = $this->get_prop($X,$Y,$x,$y);
             echo $num . ',';
             if ($num === "0") {
                $solving_count++;
             }
-
           }
           echo ' ';
         }
@@ -344,20 +356,24 @@ class NUMPLA {
             }
           }
         }
-      //  echo '--- --- --- --- --- --- --- --- ---'. PHP_EOL;
-        echo '  -A- -B- -C- -D- -E- -F- -G- -H- -I-'. PHP_EOL;
+        if  ($y == 0) {
+        echo '  -A- -B- -C-  -D- -E- -F-  -G- -H- -I-'. PHP_EOL;
+        } else {
+        echo '  --- --- --- --- --- --- --- --- ---'. PHP_EOL;
+        }
         foreach(range(0,2) as $l) {
           echo 3*$Y+$y .'|';
           foreach(range(0,2) as $X) {
             foreach(range(0,2) as $x) {
               echo substr($arr_str[3* $X + $x],3*$l,3).'|';
+              if ($x == 2) echo '|';
             }
           }
             echo PHP_EOL;
         }
       }
     }
-        echo '  -A- -B- -C- -D- -E- -F- -G- -H- -I-'. PHP_EOL;
+        echo '  -A- -B- -C-  -D- -E- -F-  -G- -H- -I-'. PHP_EOL;
   }
 
   function apply_solved_cells() {
@@ -375,9 +391,7 @@ class NUMPLA {
   function init($subject) {
     foreach ($subject as $cell_id => $num) {
       $cell_adrs = $this->id2adrs($cell_id); 
-      //echo $cell_adrs . 'LINE='. __LINE__ .PHP_EOL;
       if ((int)$num > 0) {
-//echo PRESET. PHP_EOL;
         $this->cell[$cell_adrs] = [
           'adrs' => $cell_adrs,
           'stat' => PRESET,
@@ -386,9 +400,9 @@ class NUMPLA {
           'cass33' => "0",
           'cass19' => "0",
           'cass91' => "0",
+          'mask' => "0",
         ];
       } else {
-//echo SOLVING . PHP_EOL;
         $this->cell[$cell_adrs] = [
           'adrs' => $cell_adrs,
           'stat' => SOLVING,
@@ -397,6 +411,7 @@ class NUMPLA {
           'cass19' => "0",
           'cass91' => "0",
           'cass' =>  "0",
+          'mask' => "0",
         ];
       }
     }
@@ -429,17 +444,53 @@ class NUMPLA {
 require_once("subjects.php");
 
 $com = '';
-$cnp;
+$cnp= '';
 
-while($com !== "quit") {
+function colrow2id($colrow) {
+    $row = [ '0' =>   0, '1' =>   9, '2' =>  18,
+             '3' =>   27, '4' =>   36, '5' =>   45,
+             '6' =>   54, '7' =>   63, '8' =>   72,];
+    $col = [
+      'A' => 0, 'B' => 1, 'C' => 2,
+      'D' => 3, 'E' => 4, 'F' => 5,
+      'G' => 6, 'H' => 7, 'I' => 8,
+      'a' => 0, 'b' => 1, 'c' => 2,
+      'd' => 3, 'e' => 4, 'f' => 5,
+      'g' => 6, 'h' => 7, 'i' => 8,
+    ];
+    return $row[substr($colrow,1,1)] + $col[substr($colrow,0,1)];
+}
+
+while($com !== "quit" and $com !== "q") {
+  echo PHP_EOL;
   echo '$command-> ';
-  $com = trim(fgets(STDIN));
-  echo 'com: '. $com. PHP_EOL;
-  if ($com === "load") {
-  //  $cnp = new NUMPLA($subject_Px14);
-    $cnp = new NUMPLA($subject_P001);
+  $com_arr = [];
+  $com_arr = explode(" ", trim(fgets(STDIN)));
+  echo 'com: ';
+  foreach($com_arr as $arg) {
+    echo ' ' . $arg;
+  }
+  if (count($com_arr) >= 1) {
+    $com = trim($com_arr[0]);
+    $arc = count($com_arr);
+  }
+  if ($com === "load" or $com == "l") {
+    $subject_keys = array_keys($subject);
+    if ($arc == 1) {
+      foreach($subject_keys as $no => $name) {
+       echo $no .'. : '.$name. PHP_EOL;
+      }
+    } else {
+      if ($arc == 2) {
+        $cnp = new NUMPLA($subject[$subject_keys[(int)$com_arr[1]]]);
+        $cnp->map();
+      }
+    }
+
+    //if (isset($com_arr[1]);
+    //$cnp = new NUMPLA($subject_P001);
   } else
-  if ($com === "solveall") {
+  if ($com === "solveall" or $com === "a") {
     $resolved_count = 0;
     $cnp->map();
     $trial = 0;
@@ -479,7 +530,7 @@ while($com !== "quit") {
   if ($com === "mapdet") {
     $cnp->mapdet();
   } else
-  if ($com === "map") {
+  if ($com === "map" or $com === "m") {
     $cnp->map();
   } else
   if ($com === "map33") {
@@ -509,6 +560,28 @@ while($com !== "quit") {
     } else {
       echo 'Subject not loaded.'. PHP_EOL;
     }
+  } else
+  if ($com === "mask" or $com === "m") {
+    if (count($com_arr) >= 1) {
+      $colrow = $com_arr[1];
+      echo 'colrow:'.$colrow . '  = '. colrow2id($colrow). PHP_EOL;
+    }
+  } else
+  if ($com === "help" or $com === "h") {
+    echo PHP_EOL;
+    echo "    1. load        (l)". PHP_EOL; 
+    echo "    2. solveall    (a)". PHP_EOL;
+    echo "    3. update      (u)". PHP_EOL;
+    echo "    4. solve       (s)". PHP_EOL;
+    echo "    5. mapdet"         . PHP_EOL;
+    echo "    6. map         (m)". PHP_EOL;
+    echo "    7. map33"          . PHP_EOL;
+    echo "    8. map91"          . PHP_EOL;
+    echo "    9. map19"          . PHP_EOL;
+    echo "   10. mapall"        . PHP_EOL;
+    echo "   11. prop       (p)". PHP_EOL;
+    echo "   12. prop2"         . PHP_EOL;
+    echo "   13. help       (h)". PHP_EOL;
   }
 }
 exit();
