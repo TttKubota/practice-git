@@ -333,8 +333,12 @@ function det_solved_cells() {
       }
       echo PHP_EOL;
     }
-    echo "not opened : " . $solving_count . PHP_EOL;
+    if ($solving_count == 0) {
+      "Subject solved!!" . PHP_EOL;
+    } else {
+      echo "Subject Not solved yet. remaining is: " . solving_count . PHP_EOL;
      echo 'Subject-'. $this->subject_no .'. : '. $this->subject_name . PHP_EOL;
+    }
   }
 
   function map_cand($cass_name) {
@@ -539,7 +543,7 @@ while($com !== "quit" and $com !== "q") {
     $cnp->map();
   } else
   if ($com === "update" or  $com === "u") {
-    $cnp->update();
+    update($cnp);
   } else
   if ($com === "solve" or  $com === "s") {
     $cnp->set_cell3x3();
@@ -573,7 +577,6 @@ while($com !== "quit" and $com !== "q") {
   } else
   if ($com === "mapall" or $com === "all") {
     $cnp->map_cand('cass');
-    echo $this->subject_no . ' : ' . $this->subject_name . PHP_EOL;
   } else
   if ($com === "prop" or $com === "prop2") {
     if (isset($cnp)  == true  and gettype($cnp) == 'object') {
