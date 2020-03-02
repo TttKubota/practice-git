@@ -211,6 +211,16 @@ class NUMPLA {
     return $ret;
   }
 
+  function gen_cand_masked($str, $mask) {
+    $ret = "";
+    foreach(range(1,9) as $c) {
+      $dch = ((string)$c === $mask)? (string)$c : '_';
+      $ret .= (strpos($str, (string)$c) !== false) ? (string)$dch : '.';
+
+    }
+    return $ret;
+  }
+
   function _merge_array($arrays) {
     $nums = [];
     foreach ($arrays as $array) {
@@ -336,12 +346,16 @@ function det_solved_cells() {
     if ($solving_count == 0) {
       "Subject solved!!" . PHP_EOL;
     } else {
-      echo "Subject Not solved yet. remaining is: " . solving_count . PHP_EOL;
+      echo "Subject Not solved yet. remaining is: " . $solving_count . PHP_EOL;
      echo 'Subject-'. $this->subject_no .'. : '. $this->subject_name . PHP_EOL;
     }
   }
 
   function map_cand($cass_name) {
+    $this->map_cand_masked($cass_name, '0');
+  }
+
+  function map_cand_masked($cass_name, $mask) {
     echo '-----------------------------'. PHP_EOL;
     $solving_count = 0;
     foreach(range(0,2) as $Y) {
@@ -368,7 +382,11 @@ function det_solved_cells() {
               if ($cass_name == 'cass') {
                 $map_cass = $cass;
               }
-              $arr_str[] = $this->gen_cand($map_cass);
+              if ($mask == '0')  {
+                $arr_str[] = $this->gen_cand($map_cass);
+              } else {
+                $arr_str[] = $this->gen_cand_masked($map_cass, $mask);
+              }
             } else {
               $arr_str[] = "    " . $num . "    ";
             }
@@ -576,7 +594,12 @@ while($com !== "quit" and $com !== "q") {
     $cnp->map_cand('cass19');
   } else
   if ($com === "mapall" or $com === "all") {
-    $cnp->map_cand('cass');
+    if ($arc == 1) {
+      $cnp->map_cand('cass');
+    } else
+    if ($arc == 2) {
+      $cnp->map_cand_masked('cass', $com_arr[1]);
+    }
   } else
   if ($com === "prop" or $com === "prop2") {
     if (isset($cnp)  == true  and gettype($cnp) == 'object') {
