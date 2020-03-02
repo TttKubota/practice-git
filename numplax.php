@@ -51,11 +51,25 @@ class NUMPLA {
       $cell_adrs = $this->id2adrs($cell_id); 
       if ($force_set_flag == true) {
         $this->cell[$cell_adrs]['num'] = $num;
-        $this->cell[$cell_adrs]['stat'] =  SOLVED;
+        $this->cell[$cell_adrs]['stat'] = ($num > 0) ? SOLVED : SOLVING;
       } else {
         $this->cell[$cell_adrs]['mask'] .= $num;
       }
   }
+  function init_cell() {
+    foreach ($this->cell as $cell_id => $c) {
+      $cell_adrs = $this->id2adrs((int)$cell_id); 
+      $this->cell[$cell_adrs]['adrs'  ] = $cell_adrs;
+      $this->cell[$cell_adrs]['stat'  ] = SOLVING;
+      $this->cell[$cell_adrs]['num'   ] = (string)"0";
+      $this->cell[$cell_adrs]['cass'  ] = (string)"0";
+      $this->cell[$cell_adrs]['cass33'] = (string)"0";
+      $this->cell[$cell_adrs]['cass19'] = (string)"0";
+      $this->cell[$cell_adrs]['cass91'] = (string)"0";
+      $this->cell[$cell_adrs]['mask'  ] = (string)"0";
+    }
+  }
+
   function set_cell3x3() {
     $stat = CREATED;
     foreach(range(0,2) as $Y) {
@@ -520,6 +534,9 @@ while($com !== "quit" and $com !== "q") {
     $com = trim($com_arr[0]);
     $arc = count($com_arr);
   }
+  if ($com === "init" or $com == "i") {
+   $cnp->init_cell();
+  } else
   if ($com === "load" or $com == "l") {
     $subject_keys = array_keys($subject);
     if ($arc == 1) {
@@ -624,8 +641,9 @@ while($com !== "quit" and $com !== "q") {
       $id = colrow2id($colrow);
       echo 'id:'.$id.'('.$colrow .') += '. $masknum . PHP_EOL;
       $cnp->set_cell_mask($id, $masknum,true);
-      $cnp->set_cell_all();
-      $cnp->map_cand('cass');
+      update($cnp);
+   //   $cnp->set_cell_all();
+   //   $cnp->map_cand('cass');
     }
   } else
   if ($com === "mask" or $com === "k") {
