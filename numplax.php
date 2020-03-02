@@ -25,9 +25,13 @@ class NUMPLA {
   var $cell = [];
   var $cass = [];
   var $single_cad_list= [];
+  var $subject_no =-1;
+  var $subject_name ="";
 
-  function __construct($subject) {
-    $this->init($subject);
+  function __construct($subject, $subject_no, $subject_name ) {
+     $this->subject_no = $subject_no;
+     $this->subject_name = $subject_name;
+     $this->init($subject);
   }
 
 
@@ -202,7 +206,7 @@ class NUMPLA {
   function gen_cand($str) {
     $ret = "";
     foreach(range(1,9) as $c) {
-      $ret .= (strpos($str, (string)$c) !== false) ? (string)$c : '*';
+      $ret .= (strpos($str, (string)$c) !== false) ? (string)$c : '.';
     }
     return $ret;
   }
@@ -330,6 +334,7 @@ function det_solved_cells() {
       echo PHP_EOL;
     }
     echo "not opened : " . $solving_count . PHP_EOL;
+     echo 'Subject-'. $this->subject_no .'. : '. $this->subject_name . PHP_EOL;
   }
 
   function map_cand($cass_name) {
@@ -368,7 +373,7 @@ function det_solved_cells() {
         if  ($y == 0) {
         echo '  -A- -B- -C-  -D- -E- -F-  -G- -H- -I-'. PHP_EOL;
         } else {
-        echo '  --- --- --- --- --- --- --- --- ---'. PHP_EOL;
+        echo '  --- --- ---  --- --- ---  --- --- ---'. PHP_EOL;
         }
         foreach(range(0,2) as $l) {
           echo 3*$Y+$y .'|';
@@ -383,6 +388,7 @@ function det_solved_cells() {
       }
     }
         echo '  -A- -B- -C-  -D- -E- -F-  -G- -H- -I-'. PHP_EOL;
+     echo 'Subject-'. $this->subject_no .'. : '. $this->subject_name . PHP_EOL;
   }
 
   function apply_solved_cells() {
@@ -455,6 +461,13 @@ require_once("subjects.php");
 $com = '';
 $cnp= '';
 
+function update($obj) {
+    $obj->set_cell3x3();
+    $obj->set_cell91();
+    $obj->set_cell19();
+    $obj->set_cell_all();
+    $obj->map_cand('cass');
+}
 function colrow2id($colrow) {
     $row = [ '0' =>   0, '1' =>   9, '2' =>  18,
              '3' =>   27, '4' =>   36, '5' =>   45,
@@ -469,6 +482,7 @@ function colrow2id($colrow) {
     ];
     return $row[substr($colrow,1,1)] + $col[substr($colrow,0,1)];
 }
+
 
 while($com !== "quit" and $com !== "q") {
   echo PHP_EOL;
@@ -491,14 +505,18 @@ while($com !== "quit" and $com !== "q") {
        echo $no .'. : '.$name. PHP_EOL;
       }
     } else {
-      if ($arc == 2) {
-        $cnp = new NUMPLA($subject[$subject_keys[(int)$com_arr[1]]]);
-        $cnp->map();
+      if ($arc == 2 and in_array((int)$com_arr[1],array_keys($subject_keys),true) === true) {
+        $subject_no=(int)$com_arr[1];
+        $subject_name =$subject_keys[$subject_no];
+        $cnp = new NUMPLA(
+          $subject[$subject_name],
+          $subject_no,
+          $subject_name
+        );
+        update($cnp);
       }
     }
 
-    //if (isset($com_arr[1]);
-    //$cnp = new NUMPLA($subject_P001);
   } else
   if ($com === "solveall" or $com === "a") {
     $resolved_count = 0;
@@ -521,10 +539,7 @@ while($com !== "quit" and $com !== "q") {
     $cnp->map();
   } else
   if ($com === "update" or  $com === "u") {
-    $cnp->set_cell3x3();
-    $cnp->set_cell91();
-    $cnp->set_cell19();
-    $cnp->set_cell_all();
+    $cnp->update();
   } else
   if ($com === "solve" or  $com === "s") {
     $cnp->set_cell3x3();
@@ -542,6 +557,10 @@ while($com !== "quit" and $com !== "q") {
   } else
   if ($com === "map" or $com === "m") {
     $cnp->map();
+      $p = $cnp->count_cells();
+        echo sprintf(
+          "PRESET  %1d\nSOLVED  %1d\nSOLVING %1d\n",
+          $p[PRESET], $p[SOLVED], $p[SOLVING]). PHP_EOL;
   } else
   if ($com === "map33") {
     $cnp->map_cand('cass33');
@@ -552,8 +571,9 @@ while($com !== "quit" and $com !== "q") {
   if ($com === "map19") {
     $cnp->map_cand('cass19');
   } else
-  if ($com === "mapall") {
+  if ($com === "mapall" or $com === "all") {
     $cnp->map_cand('cass');
+    echo $this->subject_no . ' : ' . $this->subject_name . PHP_EOL;
   } else
   if ($com === "prop" or $com === "prop2") {
     if (isset($cnp)  == true  and gettype($cnp) == 'object') {
@@ -616,28 +636,6 @@ while($com !== "quit" and $com !== "q") {
     echo "   13. help       (h)". PHP_EOL;
   }
 }
-exit();
-
-$load_subject = $subject_P178;
-$cnp = new NUMPLA($load_subject);
-$resolved_count = 0;
-$cnp->map();
-$trial = 0;
-do {
-  $cnp->set_cell3x3();
-  $cnp->set_cell91();
-  $cnp->set_cell19();
-  $cnp->set_cell_all();
-  $solved_count = count($cnp->det_solved_cells());
-  if ($solved_count > 0) {
-    $trial++;
-    echo 'TRIAL No. ' . $trial . PHP_EOL;
-    $cnp->apply_solved_cells();
-    $cnp->map();
-  }
-} while ($solved_count > 0);
-//var_dump($cnp->cell);
-$cnp->map();
 exit();
 
 
