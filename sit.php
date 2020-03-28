@@ -4,6 +4,8 @@ echo "'subject_$argv[1]' => [". PHP_EOL;
 foreach($cha as $n => $ch) {
   if ($ch =='q')
     break;
+  if ($ch =='\n' or $ch =='\r')
+    continue;
   if ($ch == '0' or $ch == 'o' or $ch == 'O' or $ch == ' ') {
   echo '0,';
   } else
