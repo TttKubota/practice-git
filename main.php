@@ -153,8 +153,8 @@ function pre_main() {
   }
   $play_list = [ 18,19 ];
   $CSNobj = new solveNumpla($subject_No);
-  foreach($play_list as $subject_No) {
-   $CSNobj =  new solveNumpla ($subject_No);
+  foreach($play_list as $subject_No){
+   $CSNobj =  new solveNumpla( $subject_No);
      main($CSNobj,$subjctBankObj, $subject_No);
   }
 }
