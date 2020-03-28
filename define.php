@@ -1,6 +1,5 @@
 <?php
 
-
 const CREATED = 'CREATED';
 const PRESET  = 'PRESET';
 const SOLVED  = 'SOLVED';
