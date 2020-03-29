@@ -240,7 +240,7 @@ function init_cell() {
 
 
   function make_area_count_list($candidate_list, $area) {
-    $sw = 1;
+    $sw = 0;
     if ($sw == 0)  {
       return $this->_1_MAKE_AREA_COUNT_LIST($candidate_list, $area);
       // $count_list[$sub_area_number][$val][] = $adrs;
@@ -262,6 +262,7 @@ function init_cell() {
     //    $count_list[$sub_area_adrs][$sub_area_number] = [];
       }
     }
+    var_dump($this->candidate_list);
     var_dump($count_list);
  //   var_dump($candidate_list);
     // $candidate_list[$adrs] => $values

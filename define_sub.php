@@ -1,5 +1,20 @@
 <?php
 
+$ext_subjects = [];
+require_once("./npz/subject_011.php"); 
+$ext_subjects[] = $ext_sub;
+require_once("./npz/subject_021.php");
+$ext_subjects[] = $ext_sub;
+require_once("./npz/subject_031.php");
+$ext_subjects[] = $ext_sub;
+require_once("./npz/subject_047.php");
+$ext_subjects[] = $ext_sub;
+require_once("./npz/subject_063.php");
+$ext_subjects[] = $ext_sub;
+require_once("./npz/subject_123.php");
+$ext_subjects[] = $ext_sub;
+
+
 
 class npz {
   var $sub_str = '';
@@ -37,8 +52,14 @@ class subjectBank {
     return $this->list;
   }
 
+  function set_ext_subject() {
+    global $ext_subjects;
+    $this->subject = $ext_subjects;
+  }
+
   function set_subject() {
   $this->subject = [
+
   'subject_sTx2' => [
     0,0,0, 0,7,8,9,1,2,
     0,0,0, 0,8,9,1,2,3,
@@ -278,6 +299,34 @@ class subjectBank {
 8,4,0, 9,3,0, 7,5,1, 
 2,9,0, 1,0,5, 0,4,0, 
 5,1,0, 0,8,0, 2,3,9, 
+],
+
+'subject_123.php' => [
+7,0,0, 0,0,0, 0,0,1, 
+0,6,0, 0,0,4, 2,0,0, 
+0,9,0, 8,6,0, 0,0,5, 
+
+0,0,7, 0,2,0, 5,0,0, 
+0,2,9, 0,4,0, 1,0,0, 
+0,0,8, 0,3,0, 9,0,0, 
+
+0,3,0, 1,5,0, 0,0,7, 
+0,7,0, 0,0,6, 4,0,0, 
+8,0,0, 0,0,0, 0,0,3, 
+],
+
+'subject_011.php' => [
+2,0,0, 3,8,0, 9,0,0, 
+0,0,0, 0,2,1, 4,0,0, 
+8,4,0, 0,0,0, 5,2,3, 
+
+5,6,8, 0,0,0, 0,4,0, 
+0,3,9, 4,0,0, 0,8,2, 
+4,0,0, 0,3,0, 0,0,9, 
+
+0,2,6, 0,4,9, 0,0,0,
+1,0,4, 0,7,3, 8,0,0, 
+9,8,0, 1,0,6, 2,0,4
 ],
 
 //        'subject_s222' => [

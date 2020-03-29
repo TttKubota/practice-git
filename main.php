@@ -14,35 +14,6 @@ $area_list = [
  'area'   => [ 'list' => $total_direct,    'tag' => 'cass'  , 'search' => $cell_id_33],
 ];
 
-function solve($sub) {
-  global $cell_id_91; 
-  global $cell_id_33; 
-  global $cell_id_to_cell_adrs;
-  global $total_direct; 
-  global $cell_adrs_to_cell_id;
-  global $cell_id_91_full;
-  global $cell_id_19_full;
-  global $cell_id_33_full;
-  global $total_direct;
-
-    $candidate_list = [];
-      foreach($total_direct as $tag_of_total => $candidates) {
-        $cand = [];
-        foreach($candidates as $candidate) {
-          if ($sub[$candidate] > 0) {
-            $cand[] = $sub[$candidate];
-          }
-        }
-        foreach (range(1,9) as $tn) {
-          if (in_array($tn, $cand,true)==false) {
-//          echo $name . ':::' . $cell_id_to_cell_adrs[$tag_of_total] .
-                   ' : ' . $tn. PHP_EOL;;
-            $candidate_list[$cell_id_to_cell_adrs[$tag_of_total]][] = $tn;
-          }
-        }
-      }
-  return $candidate_list;
-}
 function make_area_candidate_list($sub, $area) {
   global $cell_id_91; 
   global $cell_id_19; 
@@ -88,20 +59,6 @@ function set_cass_on_array_cell($candidate_list, $obj) {
   }
 }
 
-  function make_resolved_list($candidate_list, $obj) {
-    global $cell_id_33_num_index; 
-    $count_of_target = 1;
-    $resolved_list = [];
-    foreach($cell_id_33 as $tag =>  $cell_id) {
-      $resolved_list = array_merge(
-        $resolved_list,
-        strategy_03($candidate_list, $cell_id, $count_of_target)
-      );
-    }
-    foreach($resolved_list as $item) {
-      echo sprintf("solve %s %d\n",$item[0], $item[1]);
-    }
-  }
 
 // -------------main ---------------
 function main($CSNobj,$subjctBankObj, $subject_No){
@@ -147,19 +104,21 @@ function main($CSNobj,$subjctBankObj, $subject_No){
 // class_numplax.php  line  301 $sub_name
 function pre_main() {
   $subjectBankObj = new subjectBank();
+//  $subjectBankObj->set_ext_subject();
   $titles_of_subject = $subjectBankObj->get_titles();
   foreach($titles_of_subject as $no => $title) {
     echo sprintf("%4d: %s",$no, $title). PHP_EOL;
   }
-  $play_list = [ 14,16 ];
+  $play_list = [ 17,17 ];
   $CSNobj = new solveNumpla();
 
-  $subjectBankObj = new subjectBank();
+//  $subjectBankObj = new subjectBank();
   foreach($play_list as $subject_No){
     if (count($titles_of_subject) > $subject_No){
      $sub = $subjectBankObj->get_sub_by_id($subject_No);
      $CSNobj =  new solveNumpla();
      $CSNobj->init($sub);
+//     exit();
      main($CSNobj,$subjectBankObj, $subject_No);
     }
   }
