@@ -103,14 +103,16 @@ function set_cass_on_array_cell($candidate_list, $obj) {
     }
   }
 
-function main($CSNobj, $subject_No) {
+// -------------main ---------------
+function main($CSNobj,$subjctBankObj, $subject_No){
   global $cell_id_91_full;
   global $cell_id_19_full;
   global $cell_id_33_full;
   global $total_direct;
   global $area_list;
 
-    $NO = 3;
+
+  $NO = 3;
   $area_No_to_tag_name = [ 
     0 => 'area91',
     1 => 'area19', 
@@ -118,44 +120,46 @@ function main($CSNobj, $subject_No) {
     3 => 'area', 
   ];
 
-do {
-  $result = [];
-  foreach(range(0,3) as $NO) {
-    $area = $area_list[$area_No_to_tag_name[$NO]]; 
-    $candidate_list = make_area_candidate_list($CSNobj->sub, $area);
-    set_cass_on_array_cell($candidate_list, $CSNobj);
-    echo 'line:'.__LINE__.'candidate_list'.PHP_EOL;
-//    var_dump($candidate_list);
-    $CSNobj->map_cand_masked($area, 0);
-    echo 'REMAINING: ' . $CSNobj->get_remaining(). PHP_EOL;
-
-    $result = $CSNobj-> make_area_count_list($candidate_list, $area);
-
-    $CSNobj->map_cand_masked($area, 0);
-    echo 'REMAINING: ' . $CSNobj->get_remaining(). PHP_EOL;
+  do {
+    $result = [];
+    foreach(range(0,3) as $NO) {
+      $area = $area_list[$area_No_to_tag_name[$NO]]; 
+      $candidate_list = make_area_candidate_list($CSNobj->sub, $area);
+      set_cass_on_array_cell($candidate_list, $CSNobj);
+      echo 'line:'.__LINE__.'candidate_list'.PHP_EOL;
+  //  var_dump($candidate_list);
+      $CSNobj->map_cand_masked($area, 0);
+      echo 'REMAINING: ' . $CSNobj->get_remaining(). PHP_EOL;
+      $result = $CSNobj-> make_area_count_list($candidate_list, $area);
+      $CSNobj->map_cand_masked($area, 0);
+      echo 'REMAINING: ' . $CSNobj->get_remaining(). PHP_EOL;
+    }
+  } while(count($result) > 0);
+  echo "RESULT : " . $subject_No;
+  $rem = $CSNobj->get_remaining();
+  if ($rem > 0) {
+    echo "FAILED: remaining " . $rem. PHP_EOL;
+  } else {
+    echo "SUCCESS: remaining " . $rem. PHP_EOL;
   }
-} while(count($result) > 0);
-echo "RESULT : " . $subject_No;
-$rem = $CSNobj->get_remaining();
-if ($rem > 0) {
-  echo "FAILED: remaining " . $rem. PHP_EOL;
-} else {
-  echo "SUCCESS: remaining " . $rem. PHP_EOL;
-}
 }
 
 // class_numplax.php  line  301 $sub_name
 function pre_main() {
-  $subjetBankObj = new subjectBank();
-  $titles_of_subject = $subjctBankObj->get_titles();
+  $subjectBankObj = new subjectBank();
+  $titles_of_subject = $subjectBankObj->get_titles();
   foreach($titles_of_subject as $no => $title) {
     echo sprintf("%4d: %s",$no, $title). PHP_EOL;
   }
-  $play_list = [ 18,19 ];
-  $CSNobj = new solveNumpla($subject_No);
+  $play_list = [ 14,16 ];
+  $CSNobj = new solveNumpla();
+
+  $subjectBankObj = new subjectBank();
   foreach($play_list as $subject_No){
-   $CSNobj =  new solveNumpla( $subject_No);
-     main($CSNobj,$subjctBankObj, $subject_No);
+     $sub = $subjectBankObj->get_sub_by_id($subject_No);
+     $CSNobj =  new solveNumpla();
+     $CSNobj->init($sub);
+     main($CSNobj,$subjectBankObj, $subject_No);
   }
 }
 
