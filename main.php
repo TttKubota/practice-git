@@ -156,10 +156,12 @@ function pre_main() {
 
   $subjectBankObj = new subjectBank();
   foreach($play_list as $subject_No){
+    if (count($titles_of_subject) > $subject_No){
      $sub = $subjectBankObj->get_sub_by_id($subject_No);
      $CSNobj =  new solveNumpla();
      $CSNobj->init($sub);
      main($CSNobj,$subjectBankObj, $subject_No);
+    }
   }
 }
 
