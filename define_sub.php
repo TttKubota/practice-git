@@ -40,7 +40,9 @@ class subjectBank {
   }
 
   function get_sub($title) {
-    return $this->subject[$title]; 
+    $list_id = $array_flip($this->list)[$title];s;
+    $id = $list_id[$title];
+    return [ $this->subject[$title], $title, $id]; 
   }
 
   function get_sub_by_id($id) {

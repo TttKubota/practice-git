@@ -1,0 +1,25 @@
+class_numplax.php:22:    $this->init_cell();  
+class_numplax.php:25:    echo 'un solved '.$this->get_remaining() . PHP_EOL;
+class_numplax.php:416:      $this->write_cell($adrs, 'num',  $num);
+class_numplax.php:417:      $this->write_cell($adrs, 'stat', SOLVED);
+class_numplax.php:23:    $this->map();  
+class_numplax.php:24:    $this->map_cand_masked($this->list  , 0);
+class_numplax.php:90:  // small 9x9 map
+class_numplax.php:166:                $map_cass = $cass33;
+class_numplax.php:169:                $map_cass = $cass91;
+class_numplax.php:172:                $map_cass = $cass19;
+class_numplax.php:175:                $map_cass = $cass;
+class_numplax.php:177:         //     $map_cass  = $list['list'];
+class_numplax.php:180:                $arr_str[] = $this->gen_cand($map_cass);
+class_numplax.php:182:         //       $arr_str[] = gen_cand_masked($map_cass, $mask);
+class_numplax.php:157:                $this->get_prop($this->XYxy2adrs($X,$Y,$x,$y)); 
+class_numplax.php:180:                $arr_str[] = $this->gen_cand($map_cass);
+class_numplax.php:182:         //       $arr_str[] = gen_cand_masked($map_cass, $mask);
+class_numplax.php:157:                $this->get_prop($this->XYxy2adrs($X,$Y,$x,$y)); 
+class_numplax.php:24:    $this->map_cand_masked($this->list  , 0);
+class_numplax.php:245:      return $this->_1_MAKE_AREA_COUNT_LIST($candidate_list, $area);
+class_numplax.php:248:      return $this->_2_MAKE_AREA_COUNT_LIST($candidate_list, $area);
+class_numplax.php:322:    $this->set_numbers_on_result($result); 
+class_numplax.php:397:    $this->set_numbers_on_result($result); 
+define_sub.php:39:    $this->get_titles();
+define_sub.php:38:    $this->set_subject() ;

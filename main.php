@@ -1,4 +1,5 @@
-#!/usr/bin/php
+#
+!/usr/bin/php
 <?php
 
 // require_once("error.php");
@@ -14,6 +15,7 @@ $area_list = [
  'area'   => [ 'list' => $total_direct,    'tag' => 'cass'  , 'search' => $cell_id_33],
 ];
 
+
 function make_area_candidate_list($sub, $area) {
   global $cell_id_91; 
   global $cell_id_19; 
@@ -21,31 +23,38 @@ function make_area_candidate_list($sub, $area) {
   global $cell_id_91_full; 
   global $cell_id_19_full; 
   global $cell_id_33_full; 
-  global $total_direct;
   global $cell_id_to_cell_adrs;
-  global $total_direct; 
   global $cell_adrs_to_cell_id;
+  global $total_direct;
+  global $total_direct; 
   global $area_list;
 
-    $candidate_list = [];
-      foreach($area['list'] as $tag_of_total => $candidates) {
-        $cand = [];
-        foreach($candidates as $candidate) {
-          if (preg_match("/[A-I][0-9]/","$candidate") > 0) {
-            $candidate = $cell_adrs_to_cell_id[$candidate];
-          }
-          if ($sub[$candidate] > 0) {
-            $cand[] = $sub[$candidate];
-          }
-        }
-        foreach (range(1,9) as $tn) {
-          if (in_array($tn, $cand,true)==false) {
-//          echo $name . ':::' . $cell_id_to_cell_adrs[$tag_of_total] .
-//                   ' : ' . $tn. PHP_EOL;;
-            $candidate_list[$cell_id_to_cell_adrs[$tag_of_total]][] = $tn;
-          }
-        }
+//          $area['list']
+// $area['list' => $cell_id_91_full ] 
+// $area['list' => $cell_id_19_full ]
+// $area['list' => $cell_id_33_full ]
+// $area['list' => $total_direct,   ]
+// 
+
+  $candidate_list = [];
+  foreach($area['list'] as $tag_of_total => $candidates) {
+    $cand = [];
+    foreach($candidates as $candidate) {
+      if (preg_match("/[A-I][0-9]/","$candidate") > 0) {
+        $candidate = $cell_adrs_to_cell_id[$candidate];
       }
+      if ($sub[$candidate] > 0) {
+        $cand[] = $sub[$candidate];
+      }
+    }
+    foreach (range(1,9) as $tn) {
+      if (in_array($tn, $cand,true)==false) {
+//      echo $name . ':::' . $cell_id_to_cell_adrs[$tag_of_total] .
+//               ' : ' . $tn. PHP_EOL;;
+        $candidate_list[$cell_id_to_cell_adrs[$tag_of_total]][] = $tn;
+      }
+    }
+  }
   return $candidate_list;
 }
 
@@ -90,6 +99,7 @@ function main($CSNobj,$subjctBankObj, $subject_No){
       $result = $CSNobj-> make_area_count_list($candidate_list, $area);
       $CSNobj->map_cand_masked($area, 0);
       echo 'REMAINING: ' . $CSNobj->get_remaining(). PHP_EOL;
+      $CSNobj->total_answer();
     }
   } while(count($result) > 0);
   echo "RESULT : " . $subject_No;
@@ -109,7 +119,7 @@ function pre_main() {
   foreach($titles_of_subject as $no => $title) {
     echo sprintf("%4d: %s",$no, $title). PHP_EOL;
   }
-  $play_list = [ 17,17 ];
+  $play_list = [ 1,17 ];
   $CSNobj = new solveNumpla();
 
 //  $subjectBankObj = new subjectBank();

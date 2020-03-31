@@ -11,10 +11,20 @@ var $cell    = [];
 //public   $cell    = [];
   var $name;
   var $list;
+  var $answer = [];
+  var $cell_prop = [
+      'id'     => 0, 
+      'name'   => "", 
+      'preset' => 0, 
+      'blank'  => 0, 
+      'level'  => 0, 
+      'solved' => 0, 
+  ];
 
   function __construct() {
     global  $cell_id_91_full;
     $this->list    = [ 'list' => $cell_id_91_full, 'tag' => 'cass91' ]; 
+    $this->answer = [];
   }
 
   function init($sub) {
@@ -121,6 +131,7 @@ function init_cell() {
     echo sprintf("solved %d / remain %d\n", $cnt, 9*9 - $cnt); 
     echo PHP_EOL;
   }
+
   function get_prop($adrs) {
     global $cell;
     $stat =   $this->cell[$adrs]['stat'];
@@ -139,6 +150,7 @@ function init_cell() {
     }
     return $ret;
   }
+
   function XYxy2adrs($X,$Y,$x,$y) {
     global $cell_id_to_cell_adrs;
     $id = $Y * 27 + $X * 3 + $y * 9 + $x;
@@ -155,11 +167,11 @@ function init_cell() {
           foreach(range(0,2) as $x) {
             list($adrs, $stat, $num,$s1,$s2,$s3, $s4) =
                 $this->get_prop($this->XYxy2adrs($X,$Y,$x,$y)); 
-            
             $cass33 = $s2;
             $cass91 = $s2;
             $cass19 = $s2;
             $cass   = $s2;
+
             $cass_name = $list['tag'];
             if ($stat === SOLVING)  {
               if ($cass_name === 'cass33') {
@@ -228,7 +240,7 @@ function init_cell() {
 //     ........
 //   "S8"=> [ '1'=>[ 'A9' ], 
 //            '2'=>[ 'C9', 'D9' ],
-//            '3'=>[ 'C9', 'D9' ],
+//            '3'=>[ 'C9', 'D9' ]
 //            '4'=>[ 'C9', 'D9' ],
 //            '5'=>[ 'C9','D9', 'E9', 'F9', 'I9' ],
 //            '6'=>[ 'C9','D9', 'E9', 'F9', 'I9' ],
@@ -320,6 +332,7 @@ function init_cell() {
     }
     $this-> count_list = $count_list;
     $this->set_numbers_on_result($result); 
+    $this->answer = array_merge($this->answer, $result);
     return $result ; 
   }
   
@@ -422,6 +435,14 @@ function init_cell() {
       $this->sub[$id] = (integer)$num;
 //      echo $this->cell[$adrs]['stat']. PHP_EOL;
 //      echo $this->cell[$adrs]['num']. PHP_EOL;
+    }
+  }
+
+  function total_answer() {
+    $id=1;
+    foreach($this->answer as $adrs => $val) {
+     echo sprintf(" %2d : %2s = %d",$id, $adrs,$val). PHP_EOL;
+     $id++;
     }
   }
 
