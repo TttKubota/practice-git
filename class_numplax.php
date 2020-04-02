@@ -80,13 +80,14 @@ function init_cell() {
   }
 
   function   write_cell($adrs, $tag, $val) {
-    if ($this->cell[$adrs]['adrs'] === (string)$adrs) {
-      $this->cell[$adrs][$tag]  = (string)$val;
-//      echo sprintf("write_candidate::\$this->cell[%s][%s]  = (string)%s\n",
-//      $adrs,$tag,(string)$val);
-    } else {
-      echo 'adrs error. target address is '. $this->cell[$adrs]['adrs'] . PHP_EOL;
-    }
+    $this->cell[$adrs][$tag]  = (string)$val;
+//     if ($this->cell[$adrs]['adrs'] === (string)$adrs) {
+//       $this->cell[$adrs][$tag]  = (string)$val;
+// //      echo sprintf("write_candidate::\$this->cell[%s][%s]  = (string)%s\n",
+// //      $adrs,$tag,(string)$val);
+//     } else {
+//       echo 'adrs error. target address is '. $this->cell[$adrs]['adrs'] . PHP_EOL;
+//     }
   }
   function   set_list($list) {
    $this->list  = $list; 
@@ -177,7 +178,7 @@ function init_cell() {
               if ($cass_name === 'cass33') {
                 $map_cass = $cass33;
               }else
-              if ($cass_name === 'cass91') {
+             if ($cass_name === 'cass91') {
                 $map_cass = $cass91;
               }else
               if ($cass_name === 'cass19') {
@@ -250,6 +251,29 @@ function init_cell() {
 //          ];
 // ];
 
+  function estimate_count_list($count_list) {
+    $id = 0;
+    $count_list_area = [];
+    foreach($count_list as $area => $val) {
+       foreach($val as $value => $adrss) {
+         foreach($adrss as $adrs) {
+           if ($value > 0) {
+             $count_list_area[$area][$adrs][] = $value;
+           }
+         }
+       }
+    }
+    foreach($count_list_area as $area => $val) {
+      foreach($val as $adrs => $nums) {
+        if (count($nums) == 1) {
+          echo sprintf("Area-%d;  %s = %d",$area,$adrs,$nums[0]). PHP_EOL;
+        }
+      }
+    }
+    var_dump($count_list_area); 
+//    exit();
+    return [  'A0', 1 ];
+  }
 
   function make_area_count_list($candidate_list, $area) {
     $sw = 0;
@@ -274,8 +298,10 @@ function init_cell() {
     //    $count_list[$sub_area_adrs][$sub_area_number] = [];
       }
     }
-    var_dump($this->candidate_list);
-    var_dump($count_list);
+
+//    echo __LINE__ . "candidate_list()". PHP_EOL;
+//    var_dump($this->candidate_list);
+//    var_dump($count_list);
  //   var_dump($candidate_list);
     // $candidate_list[$adrs] => $values
     //   ex. $candidate_list['A9'] = [ 1,2,3 ]
@@ -301,7 +327,9 @@ function init_cell() {
       }
     }
     $result =  [];
-//    var_dump($count_list);
+    $result = array_merge($result, $this->estimate_count_list($count_list));
+    echo __LINE__ . "count_list()". PHP_EOL;
+    var_dump($count_list);
     foreach($count_list as $san => $sub_area) {
       foreach($sub_area as $num => $vals) {
         if (count($vals)==1) {

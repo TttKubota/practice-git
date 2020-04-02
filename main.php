@@ -1,5 +1,4 @@
-#
-!/usr/bin/php
+#!/usr/bin/php
 <?php
 
 // require_once("error.php");
@@ -26,7 +25,7 @@ function make_area_candidate_list($sub, $area) {
   global $cell_id_to_cell_adrs;
   global $cell_adrs_to_cell_id;
   global $total_direct;
-  global $total_direct; 
+//  global $total_direct; 
   global $area_list;
 
 //          $area['list']
@@ -90,10 +89,14 @@ function main($CSNobj,$subjctBankObj, $subject_No){
     $result = [];
     foreach(range(0,3) as $NO) {
       $area = $area_list[$area_No_to_tag_name[$NO]]; 
+
+      // main.php +18 
       $candidate_list = make_area_candidate_list($CSNobj->sub, $area);
-      set_cass_on_array_cell($candidate_list, $CSNobj);
       echo 'line:'.__LINE__.'candidate_list'.PHP_EOL;
-  //  var_dump($candidate_list);
+    var_dump($candidate_list);
+
+      set_cass_on_array_cell($candidate_list, $CSNobj);
+      
       $CSNobj->map_cand_masked($area, 0);
       echo 'REMAINING: ' . $CSNobj->get_remaining(). PHP_EOL;
       $result = $CSNobj-> make_area_count_list($candidate_list, $area);
@@ -119,7 +122,7 @@ function pre_main() {
   foreach($titles_of_subject as $no => $title) {
     echo sprintf("%4d: %s",$no, $title). PHP_EOL;
   }
-  $play_list = [ 1,17 ];
+  $play_list = [ 0,0 ];
   $CSNobj = new solveNumpla();
 
 //  $subjectBankObj = new subjectBank();

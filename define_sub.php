@@ -1,20 +1,5 @@
 <?php
 
-$ext_subjects = [];
-require_once("./npz/subject_011.php"); 
-$ext_subjects[] = $ext_sub;
-require_once("./npz/subject_021.php");
-$ext_subjects[] = $ext_sub;
-require_once("./npz/subject_031.php");
-$ext_subjects[] = $ext_sub;
-require_once("./npz/subject_047.php");
-$ext_subjects[] = $ext_sub;
-require_once("./npz/subject_063.php");
-$ext_subjects[] = $ext_sub;
-require_once("./npz/subject_123.php");
-$ext_subjects[] = $ext_sub;
-
-
 
 class npz {
   var $sub_str = '';
@@ -34,9 +19,43 @@ class subjectBank {
   var $name;
   var $list;
 
+function import_ext_subject() {
+  $ext_subjects = [];
+  require_once("./npz/subject_011.php"); 
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_011.php"); 
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_021.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_031.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_047.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_063.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_123.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_131.php"); 
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_151.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_175.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_199.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_219.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_237.php");
+  $ext_subjects[] = $ext_sub;
+  require_once("./npz/subject_152.php");
+  $this->subject = array_merge($this->subject, $ext_subjects);
+}
+
   function __construct() {
     $this->set_subject() ;
+    $this->import_ext_subject();
     $this->get_titles();
+//  var_dump($this->subject);exit();
   }
 
   function get_sub($title) {
@@ -59,8 +78,31 @@ class subjectBank {
     $this->subject = $ext_subjects;
   }
 
+  function add_ext_subject($ext_sub) {
+    $this->subject[] = $ext_sub;
+  }
+
+  function merge_ext_subject($ext_sub) {
+    $this->subject = array_merge($this->subject, $ext_sub);
+  }
+
+
   function set_subject() {
   $this->subject = [
+
+'subject_011' => [
+2,7,5, 3,8,4, 9,6,0, 
+6,9,3, 5,2,1, 4,7,0, 
+8,4,0, 6,9,0, 5,0,3, 
+
+5,6,8, 9,1,2, 3,4,0, 
+7,3,9, 4,6,5, 1,8,2, 
+4,1,2, 7,3,8, 6,5,9, 
+
+0,2,6, 8,4,9, 0,1,5,
+1,0,4, 0,7,3, 8,9,6, 
+9,8,0, 1,0,0, 2,3,4
+],
 
   'subject_sTx2' => [
     0,0,0, 0,7,8,9,1,2,

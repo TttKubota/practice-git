@@ -118,8 +118,10 @@ if ($title == null) {
     if (($i % 27) === 26) { $str .= PHP_EOL;}
   }
   $str .= ']);' . PHP_EOL;
+  $str .= "\$ext_subjects[] = \$ext_sub;" . PHP_EOL;
+  
   echo $str;
-  file_put_contents($title, $str);
+  file_put_contents('./npz/' . $title, $str);
   echo PHP_EOL;
   echo 'done..'. PHP_EOL;
   echo 'done..'. PHP_EOL;
